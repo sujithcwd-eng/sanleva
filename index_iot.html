@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sanleva - IoT</title>
+    <style>
+      .logo {
+        width: 290px;
+        font-size: 30px;
+        font-size: 30px;
+        font-weight: 600;
+        color: #fff;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        padding: 20px 30px;
+        flex: 1;
+      }
+      .header-prt {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", sans-serif;
+        overflow: hidden;
+      }
+
+      .background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("assets/img/hall.jpg") no-repeat center center fixed;
+        background-size: cover;
+        z-index: -2;
+      }
+
+      .bg-dim {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.80); /* Dimming effect */
+        z-index: -1;
+        opacity: 1;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      .bg-dim.light-on {
+        opacity: 0; /* Remove dim when light is on */
+      }
+      .btn-toggle {
+        padding-right: 30px;
+      }
+
+      .controller {
+        position: absolute;
+        z-index: 1;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.85);
+        padding: 5px 25px 15px 25px;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        margin: auto;
+        bottom: 4%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .controller h1 {
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      .lightbulb {
+        width: 85px;
+        height: 85px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        margin: 20px auto;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      .light-on {
+        background-image: url("assets/img/switch-on.png");
+        filter: drop-shadow(0 0 25px #ffd700);
+        transform: scale(1.05);
+      }
+
+      .light-off {
+        background-image: url("assets/img/switch-off.png");
+      }
+      .bg-dim.light-on {
+        display: none;
+      }
+      .status {
+        margin-top: 15px;
+        font-size: 18px;
+        color: #333;
+      }
+      img#myImage {
+        width: 40px;
+      }
+      .powered {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #666;
+      }
+      .home img {
+        width: 40px;
+        padding-left: 30px;
+        filter: invert(1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header-prt">
+      <div class="home">
+        <a href="index.html"><img src="assets/img/home.png" /></a>
+      </div>
+      <div class="logo">Sanleva IoT</div>
+      <div class="btn-toggle">
+        <div
+          class="lightbulb light-off"
+          id="bulb"
+          onclick="toggleLight()"
+        ></div>
+      </div>
+    </div>
+
+    <div class="background"></div>
+    <div class="bg-dim" id="bgEffect"></div>
+
+    <div class="controller">
+      <!-- <div class="lightbulb light-off" id="bulb" onclick="toggleLight()"></div> -->
+      <div class="status" id="status">
+        <img id="myImage" src="assets/img/lightbulb.png" />
+      </div>
+      <!-- <div class="powered">Powered by Sanleva IoT</div> -->
+    </div>
+
+    <script>
+      let isOn = false;
+      const apiUrl =
+        "https://primary-production-b8078.up.railway.app/webhook/28f36bb9-1155-48c7-975b-bba42be8757f"; // Replace with actual device endpoint
+      const bulb = document.getElementById("bulb");
+      const status = document.getElementById("status");
+      const bgEffect = document.getElementById("bgEffect");
+
+      function toggleLight() {
+        isOn = !isOn;
+
+        const payload = {
+          relay1: isOn ? "on" : "off",
+        };
+
+        // Update UI
+        if (isOn) {
+          bulb.classList.remove("light-off");
+          bulb.classList.add("light-on");
+          bgEffect.classList.add("light-on");
+          document.getElementById("myImage").src =
+            "assets/img/lightbulb (1).png";
+        } else {
+          bulb.classList.remove("light-on");
+          bulb.classList.add("light-off");
+          bgEffect.classList.remove("light-on");
+          document.getElementById("myImage").src = "assets/img/lightbulb.png";
+        }
+
+        // Send HTTP request
+        fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        })
+          .then((response) => {
+            if (!response.ok) throw new Error("HTTP " + response.status);
+          })
+          .catch((error) => {
+            status.textContent = "Error: " + error.message;
+          });
+      }
+    </script>
+  </body>
+</html>
