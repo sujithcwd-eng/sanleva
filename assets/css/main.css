@@ -13408,8 +13408,7 @@ input.main-search-input::placeholder {
     opacity: 1;
     transform: translateX(0);
 }
-/* 
-.icon img{
-   width:36px;
-   filter: invert(1);
-} */
+.contact-para .content{
+    width: 530px;
+    flex: auto;
+}
