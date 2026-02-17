@@ -11142,6 +11142,7 @@ input.main-search-input::placeholder {
 .project-details-wrapper .project-details-items .details-content h3 {
   font-size: 30px;
   margin-bottom: 5px;
+  color: var(--bg2);
 }
 @media (max-width: 767px) {
   .project-details-wrapper .project-details-items .details-content h3 {
@@ -13424,11 +13425,20 @@ input.main-search-input::placeholder {
     color:var(--black);
 }
 
+/* Default State */
+.preview-item img {
+    transition: transform 0.4s ease;   /* controls zoom speed */
+}
+
+.preview-item .content {
+    transition: all 0.4s ease;         /* controls text animation */
+}
+
 /* Hover Effects */
 .preview-item:hover img {
-    transform: scale(1.1);
-   
+    transform: scale(1.2);
 }
+
 .preview-item:hover .content {
     transform: translateY(0);
     opacity: 1;
@@ -13464,3 +13474,4 @@ input.main-search-input::placeholder {
   opacity: 1;
   transform: translateY(-50%) translateX(0);
 }
+
