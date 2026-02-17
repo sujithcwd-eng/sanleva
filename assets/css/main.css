@@ -13475,3 +13475,14 @@ input.main-search-input::placeholder {
   transform: translateY(-50%) translateX(0);
 }
 
+@media (min-width:320px) and (max-width:600px) {
+  .cta-banner-2 .cta-wrapper-2 {
+    padding: 55px 20px;
+    background-color: var(--theme);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+  
+}
