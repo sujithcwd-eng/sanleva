@@ -2456,6 +2456,10 @@ a {
 }
 a:hover {
   color: var(--title-color);
+  
+}
+ .btn-wrapper a:hover{
+      color: var(--white) !important;
 }
 a:active, a:focus, a:hover, a:visited {
   text-decoration: none;
@@ -4574,7 +4578,7 @@ ul.list strong {
   margin-bottom: 5px;
 }
 .contact-wrapper-2 .contact-left-items .contact-info-area-2 .contact-info-items .content h3 {
-  font-size: 24px;
+  font-size: 23px;
   color: var(--white);
 }
 .contact-wrapper-2 .contact-left-items .contact-info-area-2 .contact-info-items .content h3 a {
@@ -11645,7 +11649,7 @@ input.main-search-input::placeholder {
   font-weight: 700;
   line-height: 56px;
   letter-spacing: -0.96px;
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
 }
 
 .center {
@@ -11666,7 +11670,7 @@ input.main-search-input::placeholder {
 }
 
 .section-padding {
-  padding: 20px 0;
+  padding: 35px 0;
 }
 @media (max-width: 1199px) {
   .section-padding {
@@ -13411,4 +13415,52 @@ input.main-search-input::placeholder {
 .contact-para .content{
     width: 530px;
     flex: auto;
+}
+#mobile-menu ul li.active a {
+    color:var(--bg2);
+    
+}
+.contact-info-area .contact-info-items .content h3 a:hover{
+    color:var(--black);
+}
+
+/* Hover Effects */
+.preview-item:hover img {
+    transform: scale(1.1);
+   
+}
+.preview-item:hover .content {
+    transform: translateY(0);
+    opacity: 1;
+}
+.theme-btn-1 {
+  background-color: var(--theme);
+  color: var(--white);
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 18px 48px 18px 28px; /* extra right space reserved */
+  border-radius: 100px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  white-space: nowrap; /* prevent text break */
+}
+
+/* Arrow already has space, just hidden */
+.theme-btn-1::after {
+  content: "→";
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%) translateX(-8px);
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+  font-size: 18px;
+}
+
+/* Show arrow without affecting layout */
+.theme-btn-1:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
 }
