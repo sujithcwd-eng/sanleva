@@ -10840,6 +10840,7 @@ input.main-search-input::placeholder {
   color: var(--theme);
   font-weight: 500;
   margin-bottom: 5px;
+  /* font-size: 12px; */
 }
 .project-items .project-image .project-content.style2 h4 {
   font-weight: bold;
@@ -12797,10 +12798,10 @@ input.main-search-input::placeholder {
 @media (max-width: 1899px) {
   .tesimonial-section-3 .array-button {
     position: absolute;
-    left: 50%;
+    right:0px;
     transform: translateX(-50%);
     bottom: 0;
-    top: 103%;
+    top: 85%;
   }
 }
 @media (max-width: 767px) {
@@ -13525,4 +13526,268 @@ input.main-search-input::placeholder {
 .pb-80 {
     padding-bottom: 35px;
 }
+.student-enroll {
+    margin: auto;
+    width: 100%!important;
 }
+.form-container {
+    width: 100%;
+    max-width:100%!important ;
+    padding: 20px!important;
+    margin: auto;
+}
+}
+.btn-wrapper{
+  display: flex;
+  justify-content: center;
+}
+
+
+
+.form-container {
+    width: 100%;
+    max-width: 50%;
+    padding: 20px;
+    margin: auto;
+}
+.enroll-form {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border-top: 6px solid #6b3e26;
+}
+
+/* Title */
+.enroll-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #6b3e26;
+}
+
+/* Input Groups */
+.input-group {
+    margin-bottom: 18px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #5a3a2a;
+    font-weight: bold;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d6c3b5;
+    border-radius: 5px;
+    outline: none;
+    font-size: 14px;
+    transition: 0.3s;
+    color: #000;
+}
+
+/* Focus Effect */
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus {
+    border-color: #6b3e26;
+    box-shadow: 0 0 5px rgba(107, 62, 38, 0.3);
+}
+
+/* Button */
+.student-enroll button {
+    width: 100%;
+    padding: 12px;
+    color: #fff;
+    border: none;
+    background-color: var(--bg2);
+    border-radius: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+/* Responsive */
+@media (max-width: 480px) {
+    .enroll-form {
+        padding: 20px;
+    }
+}
+.student-enroll{
+     margin: auto;
+      width:40%;
+}
+
+
+/* ══════════════════════════════
+       MODAL  
+    ══════════════════════════════ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.80);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 99999;
+
+      /* Hidden by default */
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    /* ✅ Active state — use visibility + opacity so pointer-events work correctly */
+    .modal-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .modal {
+      background: #131929;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+      transform: translateY(30px) scale(0.97);
+      transition: transform 0.3s;
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px; right: 14px;
+      background: rgba(255,255,255,0.06);
+      border: none;
+      color: #888;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      line-height: 1;
+      transition: background 0.2s, color 0.2s;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.13); color: #fff; }
+
+    .modal-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 28px;
+    }
+    .modal-header h3 { font-size: 20px; font-weight: 700; color: #fff; }
+
+    /* Form */
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 1.2px; text-transform: uppercase;
+      color: #5a6780;
+      margin-bottom: 8px;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: #0a0f1e;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 8px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: #e0a84b; }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: #2e3a55; }
+
+    /* Star picker */
+    .star-rating-picker {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      gap: 2px;
+    }
+    .star-rating-picker input[type="radio"] { display: none; }
+    .star-rating-picker label {
+      font-size: 30px;
+      cursor: pointer;
+      color: #1e2840;
+      transition: color 0.12s;
+      line-height: 1;
+      letter-spacing: 0;
+      text-transform: none;
+      margin: 0;
+    }
+    /* Hover and checked states */
+    .star-rating-picker label:hover,
+    .star-rating-picker label:hover ~ label { color: #f5c518; }
+    .star-rating-picker input[type="radio"]:checked ~ label { color: #f5c518; }
+
+    /* Modal actions */
+    .modal-actions { display: flex; gap: 12px; margin-top: 26px; }
+
+    .btn-post {
+      flex: 1;
+      padding: 13px;
+      background: #e0a84b;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-post:hover { background: #c8882a; }
+
+    .btn-cancel-modal {
+      padding: 13px 22px;
+      background: transparent;
+      color: #5a6780;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-cancel-modal:hover { border-color: #5a6780; color: #fff; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(14px);
+      background: #e0a84b;
+      color: #000;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 11px 24px;
+      border-radius: 100px;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 999999;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+ 
+
+
