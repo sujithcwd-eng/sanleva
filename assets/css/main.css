@@ -13175,6 +13175,7 @@ input.main-search-input::placeholder {
   font-style: normal;
   font-weight: 700;
   line-height: 56px;
+  text-align: left;
   letter-spacing: -0.96px;
   /* text-transform: capitalize; */
 }
