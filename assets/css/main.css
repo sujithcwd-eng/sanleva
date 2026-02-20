@@ -13828,6 +13828,7 @@ input.main-search-input::placeholder {
       display: flex;
       gap:10px;
     }
+     
     .project-details-wrapper .project-details-items .list li i
  {
     margin-right: 5px;
@@ -13849,6 +13850,9 @@ input.main-search-input::placeholder {
     align-items: center;
     gap: 12px;
     margin-bottom: 23px;
+}
+.home-li li{
+    display:block;
 }
 }
 .mean-container .mean-nav ul li.active > a{
