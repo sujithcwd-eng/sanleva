@@ -15779,7 +15779,7 @@ input.main-search-input::placeholder {
 
     /* ══ SWIPER ══ */
     .swiper-wrap { position: relative; }
-    .testimonial-slider { padding-bottom: 10px !important; }
+    .testimonial-slider { padding-bottom: 30px !important; }
     .swiper-pagination-bullet { background: rgba(255,255,255,0.4) !important; width: 8px; height: 8px; }
     .swiper-pagination-bullet-active { background: #fff !important; }
 
@@ -15875,14 +15875,15 @@ input.main-search-input::placeholder {
     }
 
     /* ══ CTA BUTTON ══ */
-    .btn-wrapper { text-align: center; }
+    .btn-wrapper { text-align: center; margin-top: 40px; }
     #googleReviewBtn {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 10px;
-      padding: 14px 34px;
+      padding: 16px 36px;
       background: #fff;
-      color: var(--bg2);
+      color: #8B3A2A;
       font-weight: 800;
       font-size: 15px;
       border: none;
@@ -15890,14 +15891,28 @@ input.main-search-input::placeholder {
       cursor: pointer;
       font-family: inherit;
       letter-spacing: 0.3px;
-      transition: background 0.2s, transform 0.2s, color 0.2s;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      /* ── Mobile tap fixes ── */
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      -webkit-appearance: none;
+      appearance: none;
+      user-select: none;
+      -webkit-user-select: none;
+      position: relative;
+      z-index: 10;
+      min-height: 52px;
     }
     #googleReviewBtn:hover {
-      color: #000;
-      transform: translateY(-2px);
-
+      background: #1a1a1a;
+      color: #fff;
     }
+    #googleReviewBtn:active {
+      background: #6e2d1f;
+      color: #fff;
+      transform: scale(0.97);
+    }
+
 
     /* ══ OVERLAY ══ */
     .overlay {
@@ -16047,4 +16062,14 @@ input.main-search-input::placeholder {
       .modal-box, .confirm-box { padding: 26px 18px; }
       .modal-actions, .confirm-actions { flex-direction: column; }
       #toast { white-space: normal; text-align: center; max-width: 85vw; }
+      /* Button full width on small screens so it's easy to tap */
+      #googleReviewBtn {
+        width: 100%;
+        max-width: 340px;
+        font-size: 14px;
+        padding: 16px 20px;
+      }
+    }
+    @media (max-width: 400px) {
+      #googleReviewBtn { max-width: 100%; }
     }

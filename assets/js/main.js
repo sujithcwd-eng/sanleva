@@ -531,3 +531,39 @@ function showToast(msg, bg, color) {
 /* ══ INIT ══ */
 document.addEventListener('DOMContentLoaded', renderAll);
 
+// Fix mobile tap — listen to both click and touchend
+var gBtn = document.getElementById('googleReviewBtn');
+gBtn.addEventListener('click', openAddModal);
+gBtn.addEventListener('touchend', function(e) {
+  e.preventDefault();   // prevent ghost click delay on iOS
+  openAddModal();
+});
+document.getElementById('addClose').addEventListener('click', closeAddModal);
+document.getElementById('addCancel').addEventListener('click', closeAddModal);
+addModal.addEventListener('click', function(e) { if (e.target === addModal) closeAddModal(); });
+
+document.getElementById('addPost').addEventListener('click', function() {
+  var name = nameInput.value.trim();
+  var text = textInput.value.trim();
+  var valid = true;
+
+  if (!name) { nameInput.classList.add('err'); nameErr.classList.add('show'); valid = false; }
+  else { nameInput.classList.remove('err'); nameErr.classList.remove('show'); }
+
+  if (!chosenRating) { starPicker.classList.add('err'); starErr.classList.add('show'); valid = false; }
+  else { starPicker.classList.remove('err'); starErr.classList.remove('show'); }
+
+  if (!text) { textInput.classList.add('err'); textErr.classList.add('show'); valid = false; }
+  else { textInput.classList.remove('err'); textErr.classList.remove('show'); }
+
+  if (!valid) return;
+
+  var revs = getUserReviews();
+  revs.push({ name: name, rating: chosenRating, text: text, isUser: true });
+  setUserReviews(revs);
+
+  renderAll();
+  closeAddModal();
+  showToast('✓ Review added successfully!', '#8B3A2A', '#fff');
+  setTimeout(function() { if (swiper) swiper.slideTo(swiper.slides.length - 1); }, 350);
+});
