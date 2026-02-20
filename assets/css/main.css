@@ -6303,6 +6303,7 @@ filter: invert(71%) sepia(131%) saturate(3650%) hue-rotate(-27deg) brightness(70
 .header-main .sidebar__toggle {
   cursor: pointer;
   font-size: 20px;
+  color:#000;
 }
 
 .header-1 {
@@ -6573,7 +6574,7 @@ filter: invert(71%) sepia(131%) saturate(3650%) hue-rotate(-27deg) brightness(70
 }
 @media (max-width: 991px) {
   .header-3 .header-main {
-    padding: 20px 10px;
+    padding: 20px 0px;
   }
 }
 .header-3 .header-button::before {
@@ -6886,7 +6887,7 @@ filter: invert(71%) sepia(131%) saturate(3650%) hue-rotate(-27deg) brightness(70
 }
 
 button {
-  margin-top: 10px;
+  margin-top: 0px;
   cursor: pointer;
 }
 
@@ -13788,6 +13789,66 @@ input.main-search-input::placeholder {
       pointer-events: none;
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
- 
+@media (max-width: 767px) {
 
+
+    html, body {
+        overflow-x: hidden;
+    }
+
+    #header-sticky {
+        width: 100%;
+    }
+
+    .header-main {
+        padding: 0 10px;
+    }
+
+    .logo img {
+        height: 75px;
+    }
+    .logo img {
+    width: 200px;
+    object-fit: cover;
+}
+
+    .header-button a {
+        width: 42px;
+        height: 42px;
+        line-height: 42px;
+    }
+
+    .sticky {
+        top: 0;
+        left: 0;
+        right: 0;
+        width: auto;
+    }
+    .list ul,li{
+      display: flex;
+      gap:10px;
+    }
+    .project-details-wrapper .project-details-items .list li i
+ {
+    margin-right: 5px;
+    color: var(--theme);
+    margin-top: 6px;
+}
+.project-details-wrapper .preview-area {
+    margin-top: 30px;
+   display: block;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 30px 0;
+
+}
+.project-details-wrapper .preview-area .preview-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 23px;
+}
+}
 

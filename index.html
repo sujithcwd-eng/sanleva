@@ -63,8 +63,89 @@
   <div class="mouse-cursor cursor-outer"></div>
   <div class="mouse-cursor cursor-inner"></div>
 
+
+
+  <!-- Offcanvas Area Start -->
+  <div class="fix-area">
+    <div class="offcanvas__info">
+      <div class="offcanvas__wrapper">
+        <div class="offcanvas__content">
+          <div class="offcanvas__top mb-5 d-flex justify-content-between align-items-center">
+            <div class="offcanvas__logo">
+              <a href="index.html">
+                <img src="assets/img/logo.png" alt="logo-img">
+              </a>
+            </div>
+            <div class="offcanvas__close">
+              <button>
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <div class="mobile-menu fix mb-3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="offcanvas__overlay"></div>
+
   <!-- Header Section Start -->
   <header>
+    <div id="header-sticky" class="header-3">
+      <div class="plane-shape">
+        <img src="assets/img/logo.png" alt="shape-img">
+      </div>
+      <div class="container">
+        <div class="mega-menu-wrapper">
+          <div class="header-main">
+            <div class="header-left">
+              <div class="logo">
+                <a href="index.html" class="header-logo">
+                  <img src="assets/img/logo.png" alt="logo-img">
+                </a>
+              </div>
+            </div>
+            <div class="header-right d-flex justify-content-end align-items-center">
+              <div class="mean__menu-wrapper">
+                <div class="main-menu">
+                  <nav id="mobile-menu">
+                    <ul>
+                      <li class="has-dropdown active menu-thumb">
+                        <a href="index.html"> Home </a>
+                      </li>
+
+                      <li>
+                        <a href="index.html#about">About</a>
+                      </li>
+                      <li >
+                        <a href="service.html"> Services </a>
+                      </li>
+                      <li>
+                        <a href="index_iot.html"> IoT Experiment </a>
+                      </li>
+                      <li>
+                        <a href="contact.html">Contact</a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+              <div class="header__hamburger d-lg-none my-auto">
+                <div class="sidebar__toggle">
+                  <i class="fas fa-bars"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+
+  <!-- Header Section Start -->
+  <!-- <header>
     <div id="header-sticky" style="box-shadow: 0px 1px 15px 15px rgba(133, 133, 133, 0.61)">
       <div class="container">
         <div class="mega-menu-wrapper">
@@ -118,7 +199,23 @@
         </div>
       </div>
     </div>
-  </header>
+    <div class="mobile-menu-overlay"></div>
+
+<div class="mobile-menu">
+  <div class="mobile-menu-header">
+    <img src="assets/img/logo.png" alt="logo" />
+    <button class="mobile-close">&times;</button>
+  </div>
+
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="service.html">Services</a></li>
+    <li><a href="index_iot.html">IoT Experiment</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+</div>
+  </header> -->
 
   <!-- Hero Section Start -->
   <section class="hero-section fix hero-3">
@@ -356,7 +453,7 @@
                     </a>
                     <a href="student-form.html" data-animation="slideInRight" data-duration="2s" data-delay=".9s"
                       class="theme-btn border-white">
-                      Student Session 
+                      Student Session
                       <i class="fa-solid fa-arrow-right-long"></i>
                     </a>
                   </div>
@@ -1478,7 +1575,7 @@
             <div class="testimonial-box-items">
               <div class="icon"><img src="assets/img/icon.png" alt="icon-img" /></div>
               <div class="client-items">
-                
+
                 <div class="client-content">
                   <h4>Swetha</h4>
                   <div class="star">
@@ -1498,7 +1595,7 @@
             <div class="testimonial-box-items">
               <div class="icon"><img src="assets/img/icon.png" alt="icon-img" /></div>
               <div class="client-items">
-                
+
                 <div class="client-content">
                   <h4>Kumar</h4>
                   <div class="star">
@@ -1598,7 +1695,7 @@
 
       <!-- Header -->
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
-     
+
         <h3 style="margin:0;font-size:19px;font-weight:700;color:#fff;">Share a Review</h3>
       </div>
 
@@ -1874,4 +1971,5 @@
   </script>
 
 </body>
+
 </html>
