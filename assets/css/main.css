@@ -13851,4 +13851,7 @@ input.main-search-input::placeholder {
     margin-bottom: 23px;
 }
 }
+.mean-container .mean-nav ul li.active > a{
+    color:var(--bg2);
+}
 
