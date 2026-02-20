@@ -8006,7 +8006,7 @@ button {
 }
 
 .swiper-dot-2 .swiper-pagination-bullet.swiper-pagination-bullet-active {
-  background-color: var(--theme);
+  background-color: var(--theme) !important;
 }
 
 .swiper-dot-2 .swiper-pagination-bullet.swiper-pagination-bullet-active::before {
