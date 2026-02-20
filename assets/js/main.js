@@ -287,140 +287,247 @@
 
 
 
-// Model style-pop
 
-(function(){
 
-  /* ── Get elements ── */
-  var modal      = document.getElementById('grModal');
-  var openBtn    = document.getElementById('googleReviewBtn');
-  var closeBtn   = document.getElementById('grClose');
-  var cancelBtn  = document.getElementById('grCancel');
-  var postBtn    = document.getElementById('grPost');
-  var nameEl     = document.getElementById('grName');
-  var textEl     = document.getElementById('grText');
-  var stars      = document.querySelectorAll('#grStars span');
-  var toast      = document.getElementById('grToast');
-  var selectedRating = 0;
+'use strict';
 
-  /* ── Star picker ── */
-  stars.forEach(function(star){
-    star.addEventListener('mouseenter', function(){
-      var val = parseInt(this.getAttribute('data-val'));
-      stars.forEach(function(s){
-        s.style.color = parseInt(s.getAttribute('data-val')) <= val ? '#f5c518' : '#2a3550';
-      });
-    });
-    star.addEventListener('click', function(){
-      selectedRating = parseInt(this.getAttribute('data-val'));
-      stars.forEach(function(s){
-        s.style.color = parseInt(s.getAttribute('data-val')) <= selectedRating ? '#f5c518' : '#2a3550';
-      });
-    });
-  });
+/* ── Storage ── */
+var STORAGE_KEY = 'sanleva_reviews_v3';
 
-  document.getElementById('grStars').addEventListener('mouseleave', function(){
-    stars.forEach(function(s){
-      s.style.color = parseInt(s.getAttribute('data-val')) <= selectedRating ? '#f5c518' : '#2a3550';
-    });
-  });
+function getUserReviews() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+function setUserReviews(arr) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); } catch(e) {}
+}
 
-  /* ── Open modal ── */
-  function openModal(){
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+/* ── Default Reviews (no delete allowed) ── */
+var DEFAULTS = [
+  {
+    name: 'Manikandan', rating: 5, isUser: false,
+    text: "We've seen significant improvements in efficiency and decision-making, thanks to the actionable insights provided by the system. The predictive maintenance feature has reduced our downtime dramatically, saving us both time and costs."
+  },
+  {
+    name: 'Swetha', rating: 4, isUser: false,
+    text: "Sanleva's team has been incredibly supportive throughout the process, ensuring a smooth transition and ongoing assistance. I highly recommend Sanleva to any business looking to enhance its operational capabilities."
+  },
+  {
+    name: 'Kumar', rating: 4, isUser: false,
+    text: "The platform's seamless integration has transformed how we monitor our operations. We've seen significant improvements in efficiency and decision-making, thanks to the actionable insights provided by the system."
   }
+];
 
-  /* ── Close modal ── */
-  function closeModal(){
-    modal.style.display = 'none';
-    document.body.style.overflow = '';
+/* ── Helpers ── */
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function makeStars(n) {
+  var h = '';
+  for (var i = 1; i <= 5; i++) {
+    h += '<i class="fas fa-star' + (i > n ? ' dim' : '') + '"></i>';
   }
+  return h;
+}
 
-  openBtn.addEventListener('click',  openModal);
-  closeBtn.addEventListener('click', closeModal);
-  cancelBtn.addEventListener('click',closeModal);
+/* Quote SVG — two marks matching screenshot */
+var QUOTE_SVG =
+  '<svg viewBox="0 0 30 24" xmlns="http://www.w3.org/2000/svg">' +
+    '<path d="M0 24V14.4C0 6.432 4.992 1.584 14.976 0l1.536 2.784C11.04 4.08 8.208 7.008 7.584 11.52H12V24H0zm18 0V14.4C18 6.432 22.992 1.584 32.976 0L34.512 2.784C29.04 4.08 26.208 7.008 25.584 11.52H30V24H18z"/>' +
+  '</svg>';
 
-  /* Click backdrop */
-  modal.addEventListener('click', function(e){
-    if(e.target === modal) closeModal();
+/* ── Build one card slide ── */
+function buildSlide(r, userIdx) {
+  var canDelete = userIdx >= 0;
+  var delBtn = canDelete
+    ? '<button class="delete-btn" data-idx="' + userIdx + '" title="Delete this review">&#10005;</button>'
+    : '';
+  var badge = r.isUser ? '<span class="new-badge">New</span>' : '';
+
+  return (
+    '<div class="swiper-slide">' +
+      '<div class="t-card">' +
+        delBtn +
+        '<div class="card-top">' +
+          '<div class="card-meta">' +
+            '<div class="card-name">' + esc(r.name) + badge + '</div>' +
+            '<div class="card-stars">' + makeStars(r.rating) + '</div>' +
+          '</div>' +
+          '<div class="quote-icon">' +
+
+            '<svg viewBox="0 0 14 11" width="18" height="18" xmlns="http://www.w3.org/2000/svg"><path fill="#8B3A2A" d="M0 11V6.6C0 2.95 2.3.73 6.9 0l.7 1.28C5.07 1.87 3.79 3.22 3.49 5.3H5.5V11H0zm7.5 0V6.6C7.5 2.95 9.8.73 14.4 0l.7 1.28c-2.53.59-3.81 1.94-4.11 4.02H13V11H7.5z"/></svg>' +
+          '</div>' +
+        '</div>' +
+        '<p class="card-text">' + esc(r.text) + '</p>' +
+      '</div>' +
+    '</div>'
+  );
+}
+
+/* ── Swiper ── */
+var swiper = null;
+
+function renderAll() {
+  var wrapper = document.getElementById('testimonialWrapper');
+  var userRevs = getUserReviews();
+
+  var html = '';
+  DEFAULTS.forEach(function(r) { html += buildSlide(r, -1); });
+  userRevs.forEach(function(r, i) { html += buildSlide(r, i); });
+  wrapper.innerHTML = html;
+
+  /* Bind delete buttons AFTER DOM is set */
+  wrapper.querySelectorAll('.delete-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      openDelModal(parseInt(this.getAttribute('data-idx')));
+    });
   });
 
-  /* ESC key */
-  document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape') closeModal();
+  /* Rebuild Swiper */
+  if (swiper) { swiper.destroy(true, true); swiper = null; }
+  swiper = new Swiper('.testimonial-slider', {
+    slidesPerView : 1,
+    spaceBetween  : 24,
+    loop          : true,
+    pagination    : { el: '.swiper-pagination', clickable: true },
+    navigation    : { prevEl: '#prevBtn', nextEl: '#nextBtn' },
+    breakpoints   : {
+      680  : { slidesPerView: 2, spaceBetween: 22 },
+      1024 : { slidesPerView: 2, spaceBetween: 26 }
+    },
+    autoplay: { delay: 5000, disableOnInteraction: false },
+    grabCursor: true
   });
+}
 
-  /* ── Post review → append swiper slide ── */
-  postBtn.addEventListener('click', function(){
-    var name   = nameEl.value.trim();
-    var text   = textEl.value.trim();
-    var rating = selectedRating || 5;
+/* ══ ADD MODAL ══ */
+var addModal    = document.getElementById('addModal');
+var nameInput   = document.getElementById('grName');
+var textInput   = document.getElementById('grText');
+var starPicker  = document.getElementById('starPicker');
+var nameErr     = document.getElementById('nameErr');
+var starErr     = document.getElementById('starErr');
+var textErr     = document.getElementById('textErr');
+var chosenRating = 0;
 
-    /* Validate */
-    if(!name){
-      nameEl.style.border = '1px solid #e05555';
-      nameEl.focus(); return;
-    } else { nameEl.style.border = '1px solid rgba(255,255,255,0.1)'; }
-
-    if(!text){
-      textEl.style.border = '1px solid #e05555';
-      textEl.focus(); return;
-    } else { textEl.style.border = '1px solid rgba(255,255,255,0.1)'; }
-
-    /* Build stars HTML */
-    var starHTML = '';
-    for(var i=1;i<=5;i++){
-      starHTML += '<i class="fas fa-star' + (i>rating?' color-text':'') + '"></i>';
-    }
-
-    /* Initials */
-    var initials = name.split(/\s+/).map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
-
-    /* Google G svg */
-    var gSVG = '<svg viewBox="0 0 48 48" width="36" height="36">'
-      +'<path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>'
-      +'<path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>'
-      +'<path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>'
-      +'<path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>'
-      +'</svg>';
-
-    /* Find swiper instance */
-    var swiperEl = document.querySelector('.testimonial-slider-2');
-    if(swiperEl && swiperEl.swiper){
-      swiperEl.swiper.appendSlide(
-        '<div class="swiper-slide">'
-        +'<div class="testimonial-box-items">'
-        +'<div class="icon">'+gSVG+'</div>'
-        +'<div class="client-items">'
-        +'<div class="client-avatar">'+initials+'</div>'
-        +'<div class="client-content">'
-        +'<h4>'+name+'</h4>'
-        +'<div class="star">'+starHTML+'</div>'
-        +'</div></div>'
-        +'<p>'+text+'</p>'
-        +'</div></div>'
-      );
-      swiperEl.swiper.slideTo(swiperEl.swiper.slides.length - 1);
-    }
-
-    /* Reset */
-    nameEl.value = '';
-    textEl.value = '';
-    selectedRating = 0;
-    stars.forEach(function(s){ s.style.color = '#2a3550'; });
-
-    closeModal();
-
-    /* Toast */
-    toast.style.opacity = '1';
-    toast.style.transform = 'translateX(-50%) translateY(0)';
-    setTimeout(function(){
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateX(-50%) translateY(16px)';
-    }, 3000);
+function openAddModal() {
+  nameInput.value = '';
+  textInput.value = '';
+  chosenRating = 0;
+  refreshStars(0);
+  [nameInput, textInput].forEach(function(el) { el.classList.remove('err'); });
+  [nameErr, starErr, textErr].forEach(function(el) { el.classList.remove('show'); });
+  starPicker.classList.remove('err');
+  addModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(function() { nameInput.focus(); }, 100);
+}
+function closeAddModal() {
+  addModal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+function refreshStars(val) {
+  starPicker.querySelectorAll('span').forEach(function(s) {
+    s.classList.toggle('lit', parseInt(s.getAttribute('data-v')) <= val);
   });
+}
 
-})();
+starPicker.querySelectorAll('span').forEach(function(s) {
+  s.addEventListener('mouseover', function() { refreshStars(parseInt(this.getAttribute('data-v'))); });
+  s.addEventListener('mouseleave', function() { refreshStars(chosenRating); });
+  s.addEventListener('click', function() {
+    chosenRating = parseInt(this.getAttribute('data-v'));
+    refreshStars(chosenRating);
+    starPicker.classList.remove('err');
+    starErr.classList.remove('show');
+  });
+});
 
+document.getElementById('googleReviewBtn').addEventListener('click', openAddModal);
+document.getElementById('addClose').addEventListener('click', closeAddModal);
+document.getElementById('addCancel').addEventListener('click', closeAddModal);
+addModal.addEventListener('click', function(e) { if (e.target === addModal) closeAddModal(); });
+
+document.getElementById('addPost').addEventListener('click', function() {
+  var name = nameInput.value.trim();
+  var text = textInput.value.trim();
+  var valid = true;
+
+  if (!name) { nameInput.classList.add('err'); nameErr.classList.add('show'); valid = false; }
+  else { nameInput.classList.remove('err'); nameErr.classList.remove('show'); }
+
+  if (!chosenRating) { starPicker.classList.add('err'); starErr.classList.add('show'); valid = false; }
+  else { starPicker.classList.remove('err'); starErr.classList.remove('show'); }
+
+  if (!text) { textInput.classList.add('err'); textErr.classList.add('show'); valid = false; }
+  else { textInput.classList.remove('err'); textErr.classList.remove('show'); }
+
+  if (!valid) return;
+
+  var revs = getUserReviews();
+  revs.push({ name: name, rating: chosenRating, text: text, isUser: true });
+  setUserReviews(revs);
+
+  renderAll();
+  closeAddModal();
+  showToast('✓ Review added successfully!', '#8B3A2A', '#fff');
+  setTimeout(function() { if (swiper) swiper.slideTo(swiper.slides.length - 1); }, 350);
+});
+
+/* ══ DELETE MODAL ══ */
+var delModal   = document.getElementById('delModal');
+var pendingIdx = -1;
+
+function openDelModal(idx) {
+  var revs = getUserReviews();
+  if (!revs[idx]) return;
+  pendingIdx = idx;
+  document.getElementById('delName').textContent = revs[idx].name + '   ' + '★'.repeat(revs[idx].rating);
+  document.getElementById('delText').textContent = revs[idx].text;
+  delModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeDelModal() {
+  delModal.classList.remove('open');
+  document.body.style.overflow = '';
+  pendingIdx = -1;
+}
+
+document.getElementById('delKeep').addEventListener('click', closeDelModal);
+delModal.addEventListener('click', function(e) { if (e.target === delModal) closeDelModal(); });
+document.getElementById('delConfirm').addEventListener('click', function() {
+  if (pendingIdx < 0) return;
+  var revs = getUserReviews();
+  revs.splice(pendingIdx, 1);
+  setUserReviews(revs);
+  closeDelModal();
+  renderAll();
+  showToast('🗑 Review deleted', '#c0392b', '#fff');
+});
+
+/* ══ ESC KEY ══ */
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Escape') return;
+  if (addModal.classList.contains('open')) closeAddModal();
+  if (delModal.classList.contains('open')) closeDelModal();
+});
+
+/* ══ TOAST ══ */
+var toastEl = document.getElementById('toast');
+var toastTimer;
+function showToast(msg, bg, color) {
+  clearTimeout(toastTimer);
+  toastEl.textContent = msg;
+  toastEl.style.background = bg;
+  toastEl.style.color = color;
+  toastEl.classList.add('show');
+  toastTimer = setTimeout(function() { toastEl.classList.remove('show'); }, 3000);
+}
+
+/* ══ INIT ══ */
+document.addEventListener('DOMContentLoaded', renderAll);
 
