@@ -164,36 +164,7 @@
 
         //>> Testimonial Slider  <<// 
 
-        const testimonialSlider2 = new Swiper(".testimonial-slider-2", {
-            speed: 1500,
-            loop: true,
-            spaceBetween: 30,
-            autoplay: {
-                delay: 1500,
-                disableOnInteraction: false,
-            },
-            navigation: {
-                nextEl: ".array-prev",
-                prevEl: ".array-next",
-            },
-            breakpoints: {
-                991: {
-                    slidesPerView: 2,
-                },
-                767: {
-                    slidesPerView: 1,
-                },
-
-                575: {
-                    slidesPerView: 1,
-                },
-
-                0: {
-                    slidesPerView: 1,
-                },
-            },
-
-        });
+     
 
 
 
@@ -288,282 +259,155 @@
 
 
 
-
-'use strict';
-
-/* ── Storage ── */
-var STORAGE_KEY = 'sanleva_reviews_v3';
-
-function getUserReviews() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
-  catch(e) { return []; }
-}
-function setUserReviews(arr) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); } catch(e) {}
-}
-
-/* ── Default Reviews (no delete allowed) ── */
-var DEFAULTS = [
-  {
-    name: 'Manikandan', rating: 5, isUser: false,
-    text: "We've seen significant improvements in efficiency and decision-making, thanks to the actionable insights provided by the system. The predictive maintenance feature has reduced our downtime dramatically, saving us both time and costs."
-  },
-  {
-    name: 'Swetha', rating: 4, isUser: false,
-    text: "Sanleva's team has been incredibly supportive throughout the process, ensuring a smooth transition and ongoing assistance. I highly recommend Sanleva to any business looking to enhance its operational capabilities."
-  },
-  {
-    name: 'Kumar', rating: 4, isUser: false,
-    text: "The platform's seamless integration has transformed how we monitor our operations. We've seen significant improvements in efficiency and decision-making, thanks to the actionable insights provided by the system."
-  }
-];
-
-/* ── Helpers ── */
-function esc(s) {
-  return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function makeStars(n) {
-  var h = '';
-  for (var i = 1; i <= 5; i++) {
-    h += '<i class="fas fa-star' + (i > n ? ' dim' : '') + '"></i>';
-  }
-  return h;
-}
-
-/* Quote SVG — two marks matching screenshot */
 var QUOTE_SVG =
   '<svg viewBox="0 0 30 24" xmlns="http://www.w3.org/2000/svg">' +
     '<path d="M0 24V14.4C0 6.432 4.992 1.584 14.976 0l1.536 2.784C11.04 4.08 8.208 7.008 7.584 11.52H12V24H0zm18 0V14.4C18 6.432 22.992 1.584 32.976 0L34.512 2.784C29.04 4.08 26.208 7.008 25.584 11.52H30V24H18z"/>' +
   '</svg>';
 
-/* ── Build one card slide ── */
-function buildSlide(r, userIdx) {
-  var canDelete = userIdx >= 0;
-  var delBtn = canDelete
-    ? '<button class="delete-btn" data-idx="' + userIdx + '" title="Delete this review">&#10005;</button>'
-    : '';
-  var badge = r.isUser ? '<span class="new-badge">New</span>' : '';
 
-  return (
-    '<div class="swiper-slide">' +
-      '<div class="t-card">' +
-        delBtn +
-        '<div class="card-top">' +
-          '<div class="card-meta">' +
-            '<div class="card-name">' + esc(r.name) + badge + '</div>' +
-            '<div class="card-stars">' + makeStars(r.rating) + '</div>' +
-          '</div>' +
-          '<div class="quote-icon">' +
 
-            '<svg viewBox="0 0 14 11" width="18" height="18" xmlns="http://www.w3.org/2000/svg"><path fill="#8B3A2A" d="M0 11V6.6C0 2.95 2.3.73 6.9 0l.7 1.28C5.07 1.87 3.79 3.22 3.49 5.3H5.5V11H0zm7.5 0V6.6C7.5 2.95 9.8.73 14.4 0l.7 1.28c-2.53.59-3.81 1.94-4.11 4.02H13V11H7.5z"/></svg>' +
-          '</div>' +
-        '</div>' +
-        '<p class="card-text">' + esc(r.text) + '</p>' +
-      '</div>' +
-    '</div>'
-  );
+
+let swiper;
+let chosenRating = 0;
+
+function loadTestimonials() {
+
+    fetch("get_review.php")
+    .then(res => res.json())
+    .then(data => {
+
+        const wrapper = document.getElementById("testimonialWrapper");
+        wrapper.innerHTML = "";
+
+        data.forEach((item, index) => {
+             let badge = index === 0 
+        ? '<span class="new-badge">New</span>' 
+        : '';
+
+            wrapper.innerHTML += `
+
+
+<div class="swiper-slide">
+  <div class="t-card">
+  <button class="delete-btn" data-idx="2" title="Delete this review" onclick="deleteReview(${item.id})">✕</button>
+    <div class="card-top">
+      <div class="card-meta">
+        <div class="card-name">${item.name}  </div>
+        <div class="card-stars">${makeStars(item.rating)}</div>
+      </div>
+      <div class="quote-icon">
+       <svg viewBox="0 0 14 11" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#8B3A2A" d="M0 11V6.6C0 2.95 2.3.73 6.9 0l.7 1.28C5.07 1.87 3.79 3.22 3.49 5.3H5.5V11H0zm7.5 0V6.6C7.5 2.95 9.8.73 14.4 0l.7 1.28c-2.53.59-3.81 1.94-4.11 4.02H13V11H7.5z"/>
+        </svg>
+    </div>
+    </div>
+    <p class="card-text">${item.text}</p>
+  
+</div>
+`;
+
+
+
+
+        });
+        function makeStars(rating) {
+    rating = parseInt(rating);
+    let stars = "";
+
+    for (let i = 1; i <= 5; i++) {
+        if (i <= rating) {
+            stars += '<i class="fas fa-star"></i>';   // filled star
+        } else {
+            stars += '<i class="fas fa-star dim"></i>'; // dim star
+        }
+    }
+
+    return stars;
 }
 
-/* ── Swiper ── */
-var swiper = null;
 
-function renderAll() {
-  var wrapper = document.getElementById('testimonialWrapper');
-  var userRevs = getUserReviews();
+const stars = document.querySelectorAll("#starPicker span");
 
-  var html = '';
-  DEFAULTS.forEach(function(r) { html += buildSlide(r, -1); });
-  userRevs.forEach(function(r, i) { html += buildSlide(r, i); });
-  wrapper.innerHTML = html;
+stars.forEach(star => {
 
-  /* Bind delete buttons AFTER DOM is set */
-  wrapper.querySelectorAll('.delete-btn').forEach(function(btn) {
-    btn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      openDelModal(parseInt(this.getAttribute('data-idx')));
+    // Hover effect
+    star.addEventListener("mouseover", function () {
+        const value = this.getAttribute("data-v");
+
+        stars.forEach(s => {
+            s.classList.toggle("lit", s.getAttribute("data-v") <= value);
+        });
     });
-  });
 
-  /* Rebuild Swiper */
-  if (swiper) { swiper.destroy(true, true); swiper = null; }
-  swiper = new Swiper('.testimonial-slider', {
-    slidesPerView : 1,
-    spaceBetween  : 24,
-    loop          : true,
-    pagination    : { el: '.swiper-pagination', clickable: true },
-    navigation    : { prevEl: '#prevBtn', nextEl: '#nextBtn' },
-    breakpoints   : {
-      680  : { slidesPerView: 2, spaceBetween: 22 },
-      1024 : { slidesPerView: 2, spaceBetween: 26 }
-    },
-    autoplay: { delay: 5000, disableOnInteraction: false },
-    grabCursor: true
-  });
-}
-
-/* ══ ADD MODAL ══ */
-var addModal    = document.getElementById('addModal');
-var nameInput   = document.getElementById('grName');
-var textInput   = document.getElementById('grText');
-var starPicker  = document.getElementById('starPicker');
-var nameErr     = document.getElementById('nameErr');
-var starErr     = document.getElementById('starErr');
-var textErr     = document.getElementById('textErr');
-var chosenRating = 0;
-
-function openAddModal() {
-  nameInput.value = '';
-  textInput.value = '';
-  chosenRating = 0;
-  refreshStars(0);
-  [nameInput, textInput].forEach(function(el) { el.classList.remove('err'); });
-  [nameErr, starErr, textErr].forEach(function(el) { el.classList.remove('show'); });
-  starPicker.classList.remove('err');
-  addModal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-  setTimeout(function() { nameInput.focus(); }, 100);
-}
-function closeAddModal() {
-  addModal.classList.remove('open');
-  document.body.style.overflow = '';
-}
-function refreshStars(val) {
-  starPicker.querySelectorAll('span').forEach(function(s) {
-    s.classList.toggle('lit', parseInt(s.getAttribute('data-v')) <= val);
-  });
-}
-
-starPicker.querySelectorAll('span').forEach(function(s) {
-  s.addEventListener('mouseover', function() { refreshStars(parseInt(this.getAttribute('data-v'))); });
-  s.addEventListener('mouseleave', function() { refreshStars(chosenRating); });
-  s.addEventListener('click', function() {
-    chosenRating = parseInt(this.getAttribute('data-v'));
-    refreshStars(chosenRating);
-    starPicker.classList.remove('err');
-    starErr.classList.remove('show');
-  });
+    // Click (select rating)
+    star.addEventListener("click", function () {
+        chosenRating = this.getAttribute("data-v");
+    });
 });
 
-document.getElementById('googleReviewBtn').addEventListener('click', openAddModal);
-document.getElementById('addClose').addEventListener('click', closeAddModal);
-document.getElementById('addCancel').addEventListener('click', closeAddModal);
-addModal.addEventListener('click', function(e) { if (e.target === addModal) closeAddModal(); });
-
-document.getElementById('addPost').addEventListener('click', function() {
-  var name = nameInput.value.trim();
-  var text = textInput.value.trim();
-  var valid = true;
-
-  if (!name) { nameInput.classList.add('err'); nameErr.classList.add('show'); valid = false; }
-  else { nameInput.classList.remove('err'); nameErr.classList.remove('show'); }
-
-  if (!chosenRating) { starPicker.classList.add('err'); starErr.classList.add('show'); valid = false; }
-  else { starPicker.classList.remove('err'); starErr.classList.remove('show'); }
-
-  if (!text) { textInput.classList.add('err'); textErr.classList.add('show'); valid = false; }
-  else { textInput.classList.remove('err'); textErr.classList.remove('show'); }
-
-  if (!valid) return;
-
-  var revs = getUserReviews();
-  revs.push({ name: name, rating: chosenRating, text: text, isUser: true });
-  setUserReviews(revs);
-
-  renderAll();
-  closeAddModal();
-  showToast('✓ Review added successfully!', '#8B3A2A', '#fff');
-  setTimeout(function() { if (swiper) swiper.slideTo(swiper.slides.length - 1); }, 350);
+// Remove hover when mouse leaves
+document.getElementById("starPicker").addEventListener("mouseleave", function () {
+    stars.forEach(s => {
+        s.classList.toggle("lit", s.getAttribute("data-v") <= chosenRating);
+    });
 });
 
-/* ══ DELETE MODAL ══ */
-var delModal   = document.getElementById('delModal');
-var pendingIdx = -1;
+        if (swiper) swiper.destroy(true, true);
 
-function openDelModal(idx) {
-  var revs = getUserReviews();
-  if (!revs[idx]) return;
-  pendingIdx = idx;
-  document.getElementById('delName').textContent = revs[idx].name + '   ' + '★'.repeat(revs[idx].rating);
-  document.getElementById('delText').textContent = revs[idx].text;
-  delModal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeDelModal() {
-  delModal.classList.remove('open');
-  document.body.style.overflow = '';
-  pendingIdx = -1;
+        swiper = new Swiper(".testimonial-slider", {
+            slidesPerView: 2,
+            spaceBetween: 20,
+            loop: true,
+            dots:false,
+            pagination: { el: ".swiper-pagination", clickable: true },
+            navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
+            
+            
+        });   
+
+    });
 }
 
-document.getElementById('delKeep').addEventListener('click', closeDelModal);
-delModal.addEventListener('click', function(e) { if (e.target === delModal) closeDelModal(); });
-document.getElementById('delConfirm').addEventListener('click', function() {
-  if (pendingIdx < 0) return;
-  var revs = getUserReviews();
-  revs.splice(pendingIdx, 1);
-  setUserReviews(revs);
-  closeDelModal();
-  renderAll();
-  showToast('🗑 Review deleted', '#c0392b', '#fff');
-});
+function addReview() {
 
-/* ══ ESC KEY ══ */
-document.addEventListener('keydown', function(e) {
-  if (e.key !== 'Escape') return;
-  if (addModal.classList.contains('open')) closeAddModal();
-  if (delModal.classList.contains('open')) closeDelModal();
-});
+    const name = document.getElementById("grName").value.trim();
+    const text = document.getElementById("grText").value.trim();
 
-/* ══ TOAST ══ */
-var toastEl = document.getElementById('toast');
-var toastTimer;
-function showToast(msg, bg, color) {
-  clearTimeout(toastTimer);
-  toastEl.textContent = msg;
-  toastEl.style.background = bg;
-  toastEl.style.color = color;
-  toastEl.classList.add('show');
-  toastTimer = setTimeout(function() { toastEl.classList.remove('show'); }, 3000);
+    if (!name || !text || chosenRating == 0) {
+        alert("All fields required");
+        return;
+    }
+
+    fetch("add_review.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name:name, rating:chosenRating, text:text })
+    })
+    .then(res => res.text())
+    .then(() => {
+        closeModal();
+        loadTestimonials();
+    });
 }
 
-/* ══ INIT ══ */
-document.addEventListener('DOMContentLoaded', renderAll);
+function deleteReview(id) {
+    fetch("delete_review.php?id=" + id)
+    .then(() => loadTestimonials());
+}
 
-// Fix mobile tap — listen to both click and touchend
-var gBtn = document.getElementById('googleReviewBtn');
-gBtn.addEventListener('click', openAddModal);
-gBtn.addEventListener('touchend', function(e) {
-  e.preventDefault();   // prevent ghost click delay on iOS
-  openAddModal();
-});
-document.getElementById('addClose').addEventListener('click', closeAddModal);
-document.getElementById('addCancel').addEventListener('click', closeAddModal);
-addModal.addEventListener('click', function(e) { if (e.target === addModal) closeAddModal(); });
+function setRating(value) {
+    chosenRating = value;
+}
 
-document.getElementById('addPost').addEventListener('click', function() {
-  var name = nameInput.value.trim();
-  var text = textInput.value.trim();
-  var valid = true;
+function openModal() {
+    document.getElementById("addModal").style.display = "block";
+}
 
-  if (!name) { nameInput.classList.add('err'); nameErr.classList.add('show'); valid = false; }
-  else { nameInput.classList.remove('err'); nameErr.classList.remove('show'); }
+function closeModal() {
+    document.getElementById("addModal").style.display = "none";
+    chosenRating = 0;
+    document.getElementById("grName").value = "";
+    document.getElementById("grText").value = "";
+}
 
-  if (!chosenRating) { starPicker.classList.add('err'); starErr.classList.add('show'); valid = false; }
-  else { starPicker.classList.remove('err'); starErr.classList.remove('show'); }
-
-  if (!text) { textInput.classList.add('err'); textErr.classList.add('show'); valid = false; }
-  else { textInput.classList.remove('err'); textErr.classList.remove('show'); }
-
-  if (!valid) return;
-
-  var revs = getUserReviews();
-  revs.push({ name: name, rating: chosenRating, text: text, isUser: true });
-  setUserReviews(revs);
-
-  renderAll();
-  closeAddModal();
-  showToast('✓ Review added successfully!', '#8B3A2A', '#fff');
-  setTimeout(function() { if (swiper) swiper.slideTo(swiper.slides.length - 1); }, 350);
-});
+document.addEventListener("DOMContentLoaded", loadTestimonials);

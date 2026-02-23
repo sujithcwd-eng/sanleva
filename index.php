@@ -1,3 +1,6 @@
+<?php
+// index.php
+?>
 <!DOCTYPE html>
 <html lang="zxx">
 
@@ -72,7 +75,7 @@
         <div class="offcanvas__content">
           <div class="offcanvas__top mb-2 d-flex justify-content-between align-items-center">
             <div class="offcanvas__logo">
-              <a href="index.html">
+              <a href="index.php">
                 <img src="assets/img/logo.png" alt="logo-img">
               </a>
             </div>
@@ -100,7 +103,7 @@
           <div class="header-main">
             <div class="header-left">
               <div class="logo">
-                <a href="index.html" class="header-logo">
+                <a href="index.php" class="header-logo">
                   <img src="assets/img/logo.png" alt="logo-img">
                 </a>
               </div>
@@ -111,11 +114,11 @@
                   <nav id="mobile-menu">
                     <ul>
                       <li class="has-dropdown active menu-thumb">
-                        <a href="index.html"> Home </a>
+                        <a href="index.php"> Home </a>
                       </li>
 
                       <li>
-                        <a href="index.html#about">About</a>
+                        <a href="index.php#about">About</a>
                       </li>
                       <li >
                         <a href="service.html"> Services </a>
@@ -1537,8 +1540,8 @@
       <img src="assets/img/mask-shape.png" alt="shape-img" />
     </div>
     <div class="array-button">
-      <button class="array-prev" id="prevBtn"><i class="fal fa-arrow-left"></i></button>
-      <button class="array-next" id="nextBtn"><i class="fal fa-arrow-right"></i></button>
+           <button class="array-prev swiper-button-prev" id="prevBtn"><i class="fal fa-arrow-left"></i></button>
+      <button class="array-next swiper-button-next" id="nextBtn"><i class="fal fa-arrow-right"></i></button>
     </div>
     <div class="container">
       <div class="section-title title-area mx-auto mb-20">
@@ -1555,12 +1558,13 @@
     <div class="swiper-wrap">
       <div class="swiper testimonial-slider">
         <div class="swiper-wrapper" id="testimonialWrapper"></div>
-        <div class="swiper-pagination"></div>
+         <!-- <div class="swiper-pagination"></div> -->
+          
       </div>
     </div>
     <!-- CTA -->
     <div class="btn-wrapper">
-      <button id="googleReviewBtn">
+      <button id="googleReviewBtn" onclick="openModal()">
         Share a Google Review
       </button>
     </div>
@@ -1572,7 +1576,7 @@
 ══════════════════════════════════ -->
 <div class="overlay" id="addModal">
   <div class="modal-box">
-    <button class="modal-close" id="addClose">&#x2715;</button>
+    <button class="modal-close" id="addClose"  onclick="closeModal()">&#x2715;</button>
     <div class="modal-title">✍️ Share Your Review</div>
 
     <div class="form-group">
@@ -1581,6 +1585,7 @@
       <div class="err-msg" id="nameErr">Please enter your name</div>
     </div>
 
+ 
     <div class="form-group">
       <label class="form-label">Rating *</label>
       <div class="star-picker" id="starPicker">
@@ -1600,8 +1605,8 @@
     </div>
 
     <div class="modal-actions">
-      <button class="btn-cancel" id="addCancel">Cancel</button>
-      <button class="btn-submit" id="addPost">Post Review</button>
+      <button class="btn-cancel" id="addCancel"  onclick="closeModal()">Cancel</button>
+      <button class="btn-submit" id="addPost" onclick="addReview()">Post Review</button>
     </div>
   </div>
 </div>
@@ -1706,7 +1711,7 @@
               <div class="widget footer-widget wow fadeInUp" data-wow-delay=".6s">
                 <div class="gt-widget-about">
                   <div class="about-logo">
-                    <a href="index.html"><img src="assets/img/logo.png" alt="Sanleva Prime Solutions" /></a>
+                    <a href="index.php"><img src="assets/img/logo.png" alt="Sanleva Prime Solutions" /></a>
                   </div>
                   <p class="about-text">
                     We specialize in harnessing the power of the Internet of
@@ -1725,8 +1730,8 @@
                 <h3 class="widget_title">Quick Links</h3>
                 <div class="menu-all-pages-container">
                   <ul class="menu">
-                    <li>
-                      <a href="index.html"><i class="fa-solid fa-chevrons-right"></i>Home</a>
+                    <li class="active">
+                      <a href="index.php"><i class="fa-solid fa-chevrons-right"></i>Home</a>
                     </li>
                     <li>
                       <a href="#about"><i class="fa-solid fa-chevrons-right"></i>About</a>
@@ -1772,7 +1777,7 @@
           <div class="layout-text wow fadeInUp" data-wow-delay=".3s">
             <p class="copyright">
               <i class="fal fa-copyright"></i> Copyright 2026 by
-              <a href="index.html">Sanleva</a>
+              <a href="index.php">Sanleva</a>
             </p>
           </div>
           <div class="layout-link wow fadeInUp" data-wow-delay=".6s">
